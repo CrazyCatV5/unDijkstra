@@ -146,3 +146,75 @@ body {
         left: 0;
     }
 }
+#gameCanvas .node {
+    width: 5%; /* Уменьшенные размеры узлов */
+    height: 5%;
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 40px;
+    max-height: 40px;
+    background-color: #00f;
+    border-radius: 50%;
+    position: absolute;
+    text-align: center;
+    line-height: 100%;
+    cursor: pointer;
+    color: white;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+#gameCanvas .cost-label {
+    background-color: white;
+    border: 1px solid black;
+    padding: 2px 5px;
+    font-size: 0.7em;
+    border-radius: 3px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+    #gameCanvas {
+        width: 95%;
+        height: 95%;
+    }
+
+    #gameCanvas .node {
+        width: 4%;
+        height: 4%;
+        font-size: 0.8em;
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    #gameCanvas .cost-label {
+        font-size: 0.6em;
+    }
+}
+
+@media (max-width: 480px) {
+    #gameCanvas {
+        width: 100%;
+        height: 100%;
+    }
+
+    #gameCanvas .node {
+        width: 3.5%;
+        height: 3.5%;
+        font-size: 0.7em;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+
+    #gameCanvas .cost-label {
+        font-size: 0.6em;
+    }
+}

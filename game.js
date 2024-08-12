@@ -55,13 +55,13 @@ document.addEventListener('DOMContentLoaded', function () {
         let previousColumnNodes = [];
     
         for (let col = 0; col < columns; col++) {
-            const x = col * (gameCanvas.clientWidth - 150) / (columns - 1) + 75; // Увеличиваем горизонтальное расстояние
+            const x = col * (gameCanvas.clientWidth - 200) / (columns - 1) + 100; // Увеличиваем горизонтальное расстояние
     
             const nodesInColumn = col === 0 || col === columns - 1 ? 1 : Math.floor(Math.random() * (maxNodesPerColumn - minNodesPerColumn + 1)) + minNodesPerColumn;
             let currentColumnNodes = [];
     
             for (let i = 0; i < nodesInColumn && nodeId <= nodeCount; i++) {
-                const y = (i + 1) * (gameCanvas.clientHeight - 250) / (nodesInColumn + 1) + 125; // Увеличиваем вертикальное расстояние
+                const y = (i + 1) * (gameCanvas.clientHeight - 100) / (nodesInColumn + 1) + 50; // Увеличиваем вертикальное расстояние
                 nodes.push({ id: nodeId, x: x, y: y });
                 nodePositions[nodeId] = { x: x, y: y };
                 currentColumnNodes.push(nodeId);
@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nodes[nodes.length - 1].isEnd = true;
         currentNode = nodes[0].id;
     }
+    
     
 
     function isPathAvailable(startId, endId, visited = new Set()) {
