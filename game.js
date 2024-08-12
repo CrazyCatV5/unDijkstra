@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let currentColumnNodes = [];
     
             for (let i = 0; i < nodesInColumn && nodeId <= nodeCount; i++) {
-                const y = (i + 1) * (gameCanvas.clientHeight - 100) / (nodesInColumn + 1) + 50; // Увеличиваем вертикальное расстояние
+                const y = (i + 1) * (gameCanvas.clientHeight - 10) / (nodesInColumn + 1) + 10; // Увеличиваем вертикальное расстояние
                 nodes.push({ id: nodeId, x: x, y: y });
                 nodePositions[nodeId] = { x: x, y: y };
                 currentColumnNodes.push(nodeId);
