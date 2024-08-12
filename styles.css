@@ -9,6 +9,7 @@ body, html {
     align-items: center;
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
+    overflow: hidden;
 }
 
 #gameCanvas {
@@ -37,14 +38,13 @@ button:hover {
 }
 
 /* Стили для узлов графа */
-#gameCanvas .node {
-    width: 5%; /* Уменьшенные размеры узлов */
+.node {
+    width: 5%; 
     height: 5%;
     min-width: 20px;
     min-height: 20px;
     max-width: 40px;
     max-height: 40px;
-    background-color: #00f;
     border-radius: 50%;
     position: absolute;
     text-align: center;
@@ -55,28 +55,34 @@ button:hover {
     transition: all 0.3s ease;
 }
 
-#gameCanvas .node.start {
+.node.start {
+    background-color: green;
     border: 2px solid green;
 }
 
-#gameCanvas .node.end {
+.node.end {
+    background-color: gold;
     border: 2px solid gold;
 }
 
-#gameCanvas .node.accessible {
-    background-color: #0f0;
+.node.current {
+    background-color: blue;
 }
 
-#gameCanvas .node.inaccessible {
-    background-color: #f00;
+.node.visited {
+    background-color: orange;
 }
 
-#gameCanvas .node.connected-to-end {
-    border: 2px dashed yellow;
+.node.accessible {
+    background-color: lightgreen;
+}
+
+.node.default {
+    background-color: grey;
 }
 
 /* Стили для подписей стоимости */
-#gameCanvas .cost-label {
+.cost-label {
     background-color: white;
     border: 1px solid black;
     padding: 2px 5px;
@@ -94,95 +100,7 @@ button:hover {
         height: 90%;
     }
 
-    #gameCanvas .node {
-        width: 5%;
-        height: 5%;
-        font-size: 0.8em;
-    }
-
-    button {
-        font-size: 14px;
-    }
-
-    #gameCanvas .cost-label {
-        font-size: 0.7em;
-    }
-}
-
-@media (max-width: 480px) {
-    #gameCanvas {
-        width: 95%;
-        height: 95%;
-    }
-
-    #gameCanvas .node {
-        width: 4%;
-        height: 4%;
-        font-size: 0.7em;
-    }
-
-    button {
-        font-size: 12px;
-        padding: 8px 16px;
-    }
-
-    #gameCanvas .cost-label {
-        font-size: 0.6em;
-    }
-}
-body {
-    overflow: hidden;
-}
-
-@media screen and (orientation: portrait) {
-    body {
-        transform: rotate(-90deg);
-        transform-origin: left top;
-        width: 100vh;
-        height: 100vw;
-        overflow: hidden;
-        position: absolute;
-        top: 100%;
-        left: 0;
-    }
-}
-#gameCanvas .node {
-    width: 5%; /* Уменьшенные размеры узлов */
-    height: 5%;
-    min-width: 20px;
-    min-height: 20px;
-    max-width: 40px;
-    max-height: 40px;
-    background-color: #00f;
-    border-radius: 50%;
-    position: absolute;
-    text-align: center;
-    line-height: 100%;
-    cursor: pointer;
-    color: white;
-    font-size: 1em;
-    transition: all 0.3s ease;
-}
-
-#gameCanvas .cost-label {
-    background-color: white;
-    border: 1px solid black;
-    padding: 2px 5px;
-    font-size: 0.7em;
-    border-radius: 3px;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    transition: all 0.3s ease;
-}
-
-/* Адаптивные стили для мобильных устройств */
-@media (max-width: 768px) {
-    #gameCanvas {
-        width: 95%;
-        height: 95%;
-    }
-
-    #gameCanvas .node {
+    .node {
         width: 4%;
         height: 4%;
         font-size: 0.8em;
@@ -192,18 +110,18 @@ body {
         font-size: 14px;
     }
 
-    #gameCanvas .cost-label {
+    .cost-label {
         font-size: 0.6em;
     }
 }
 
 @media (max-width: 480px) {
     #gameCanvas {
-        width: 100%;
-        height: 100%;
+        width: 95%;
+        height: 95%;
     }
 
-    #gameCanvas .node {
+    .node {
         width: 3.5%;
         height: 3.5%;
         font-size: 0.7em;
@@ -214,7 +132,21 @@ body {
         padding: 8px 16px;
     }
 
-    #gameCanvas .cost-label {
+    .cost-label {
         font-size: 0.6em;
+    }
+}
+
+/* Адаптация для портретной ориентации */
+@media screen and (orientation: portrait) {
+    body {
+        transform: rotate(-90deg);
+        transform-origin: left top;
+        width: 100vh;
+        height: 100vw;
+        overflow: hidden;
+        position: absolute;
+        top: 100%;
+        left: 0;
     }
 }

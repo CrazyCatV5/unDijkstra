@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const costCounter = document.getElementById('costCounter');
     const regenerateButton = document.createElement('button');
     const surrenderButton = document.createElement('button');
+    const showAlgorithmButton = document.createElement('button');
 
     let nodes = [];
     let edges = [];
@@ -18,8 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     regenerateButton.style.padding = '10px 20px';
     regenerateButton.style.fontSize = '16px';
     regenerateButton.addEventListener('click', () => {
-        generateValidGraph();
-        drawGraph();
+        resetLevel();
     });
     document.body.appendChild(regenerateButton);
 
@@ -35,86 +35,207 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     document.body.appendChild(surrenderButton);
 
-    function generateValidGraph() {
-        do {
-            generateGraph();
-        } while (!isPathAvailable(nodes[0].id, nodes[nodes.length - 1].id));
-    }
+    showAlgorithmButton.innerText = "Показать алгоритм";
+    showAlgorithmButton.style.position = 'absolute';
+    showAlgorithmButton.style.bottom = '60px';
+    showAlgorithmButton.style.left = '50%';
+    showAlgorithmButton.style.transform = 'translateX(-50%)';
+    showAlgorithmButton.style.padding = '10px 20px';
+    showAlgorithmButton.style.fontSize = '16px';
+    showAlgorithmButton.addEventListener('click', () => {
+        demonstrateAlgorithm();
+    });
+    document.body.appendChild(showAlgorithmButton);
 
-    function generateGraph() {
-        nodes = [];
-        edges = [];
+    const levels = [
+        {
+            nodes: [
+                { id: 1, x: 100, y: 100 },
+                { id: 2, x: 300, y: 100 },
+                { id: 3, x: 500, y: 100 },
+                { id: 4, x: 300, y: 300 },
+                { id: 5, x: 500, y: 200 },
+                { id: 6, x: 700, y: 300 }
+            ],
+            edges: [
+                { from: 1, to: 2, cost: 3 },
+                { from: 2, to: 3, cost: 1 },
+                { from: 2, to: 4, cost: 4 },
+                { from: 3, to: 5, cost: 2 },
+                { from: 4, to: 6, cost: 5 },
+                { from: 5, to: 6, cost: 3 }
+            ],
+            startNode: 1,
+            endNode: 6
+        },
+        {
+            nodes: [
+                { id: 1, x: 100, y: 200 },
+                { id: 2, x: 250, y: 100 },
+                { id: 3, x: 250, y: 300 },
+                { id: 4, x: 400, y: 200 },
+                { id: 5, x: 550, y: 100 },
+                { id: 6, x: 550, y: 300 },
+                { id: 7, x: 700, y: 200 }
+            ],
+            edges: [
+                { from: 1, to: 2, cost: 2 },
+                { from: 1, to: 3, cost: 4 },
+                { from: 2, to: 4, cost: 3 },
+                { from: 3, to: 4, cost: 1 },
+                { from: 4, to: 5, cost: 2 },
+                { from: 4, to: 6, cost: 5 },
+                { from: 5, to: 7, cost: 3 },
+                { from: 6, to: 7, cost: 2 }
+            ],
+            startNode: 1,
+            endNode: 7
+        },
+        {
+            nodes: [
+                { id: 1, x: 100, y: 100 },
+                { id: 2, x: 300, y: 100 },
+                { id: 3, x: 300, y: 300 },
+                { id: 4, x: 500, y: 200 },
+                { id: 5, x: 700, y: 100 },
+                { id: 6, x: 700, y: 300 },
+                { id: 7, x: 900, y: 200 }
+            ],
+            edges: [
+                { from: 1, to: 2, cost: 3 },
+                { from: 1, to: 3, cost: 5 },
+                { from: 2, to: 4, cost: 2 },
+                { from: 3, to: 4, cost: 1 },
+                { from: 4, to: 5, cost: 4 },
+                { from: 4, to: 6, cost: 3 },
+                { from: 5, to: 7, cost: 2 },
+                { from: 6, to: 7, cost: 3 }
+            ],
+            startNode: 1,
+            endNode: 7
+        },
+        {
+            nodes: [
+                { id: 1, x: 100, y: 150 },
+                { id: 2, x: 300, y: 150 },
+                { id: 3, x: 300, y: 350 },
+                { id: 4, x: 500, y: 150 },
+                { id: 5, x: 500, y: 350 },
+                { id: 6, x: 700, y: 250 },
+                { id: 7, x: 900, y: 250 }
+            ],
+            edges: [
+                { from: 1, to: 2, cost: 2 },
+                { from: 1, to: 3, cost: 4 },
+                { from: 2, to: 4, cost: 3 },
+                { from: 3, to: 5, cost: 1 },
+                { from: 4, to: 6, cost: 5 },
+                { from: 5, to: 6, cost: 2 },
+                { from: 6, to: 7, cost: 3 }
+            ],
+            startNode: 1,
+            endNode: 7
+        },
+        {
+            nodes: [
+                { id: 1, x: 150, y: 100 },
+                { id: 2, x: 300, y: 200 },
+                { id: 3, x: 150, y: 300 },
+                { id: 4, x: 450, y: 150 },
+                { id: 5, x: 450, y: 350 },
+                { id: 6, x: 600, y: 100 },
+                { id: 7, x: 600, y: 300 },
+                { id: 8, x: 750, y: 200 }
+            ],
+            edges: [
+                { from: 1, to: 2, cost: 3 },
+                { from: 1, to: 3, cost: 4 },
+                { from: 2, to: 4, cost: 2 },
+                { from: 3, to: 5, cost: 3 },
+                { from: 4, to: 6, cost: 2 },
+                { from: 5, to: 7, cost: 1 },
+                { from: 6, to: 8, cost: 4 },
+                { from: 7, to: 8, cost: 2 }
+            ],
+            startNode: 1,
+            endNode: 8
+        }
+    ];
+
+    let currentLevelIndex = 0;
+    let currentLevel = levels[currentLevelIndex];
+
+    loadLevel(currentLevel);
+
+    function loadLevel(level) {
+        nodes = level.nodes;
+        edges = level.edges;
         nodePositions = {};
     
-        const columns = 6;
-        const minNodesPerColumn = 2;
-        const maxNodesPerColumn = 4;
-        const nodeCount = columns * maxNodesPerColumn;
+        // Определяем размеры экрана
+        const canvasWidth = gameCanvas.clientWidth;
+        const canvasHeight = gameCanvas.clientHeight;
     
-        let nodeId = 1;
-        let previousColumnNodes = [];
+        // Определяем границы графа
+        const graphBounds = {
+            minX: Math.min(...nodes.map(node => node.x)),
+            maxX: Math.max(...nodes.map(node => node.x)),
+            minY: Math.min(...nodes.map(node => node.y)),
+            maxY: Math.max(...nodes.map(node => node.y))
+        };
     
-        for (let col = 0; col < columns; col++) {
-            const x = col * (gameCanvas.clientWidth - 200) / (columns - 1) + 100; // Увеличиваем горизонтальное расстояние
+        // Вычисляем коэффициенты масштабирования
+        const scaleX = canvasWidth / (graphBounds.maxX - graphBounds.minX + 100);
+        const scaleY = canvasHeight / (graphBounds.maxY - graphBounds.minY + 100);
+        const scale = Math.min(scaleX, scaleY); // Выбираем минимальный коэффициент
     
-            const nodesInColumn = col === 0 || col === columns - 1 ? 1 : Math.floor(Math.random() * (maxNodesPerColumn - minNodesPerColumn + 1)) + minNodesPerColumn;
-            let currentColumnNodes = [];
+        nodes.forEach(node => {
+            nodePositions[node.id] = {
+                x: (node.x - graphBounds.minX) * scale + 50,
+                y: (node.y - graphBounds.minY) * scale + 50
+            };
+        });
     
-            for (let i = 0; i < nodesInColumn && nodeId <= nodeCount; i++) {
-                const y = (i + 1) * (gameCanvas.clientHeight - 10) / (nodesInColumn + 1) + 10; // Увеличиваем вертикальное расстояние
-                nodes.push({ id: nodeId, x: x, y: y });
-                nodePositions[nodeId] = { x: x, y: y };
-                currentColumnNodes.push(nodeId);
-                nodeId++;
-            }
-    
-            if (col > 0) {
-                previousColumnNodes.forEach(fromNodeId => {
-                    const toNodeId = currentColumnNodes[Math.floor(Math.random() * currentColumnNodes.length)];
-                    const cost = Math.floor(Math.random() * 10) + 1;
-                    edges.push({ from: fromNodeId, to: toNodeId, cost: cost });
-                });
-            }
-    
-            previousColumnNodes = currentColumnNodes;
-        }
-    
-        // Создаем путь от первого узла до последнего узла (гарантированно связанный граф)
-        for (let i = 0; i < columns - 1; i++) {
-            const fromNode = nodes[i];
-            const toNode = nodes[i + 1];
-            const cost = Math.floor(Math.random() * 10) + 1;
-            edges.push({ from: fromNode.id, to: toNode.id, cost: cost });
-        }
-    
-        nodes[0].isStart = true;
-        nodes[nodes.length - 1].isEnd = true;
-        currentNode = nodes[0].id;
+        currentNode = level.startNode;
+        currentCost = 0;
+        drawGraph();
+        costCounter.innerHTML = `Текущая стоимость: ${currentCost}`;
     }
     
-    
 
-    function isPathAvailable(startId, endId, visited = new Set()) {
-        if (startId === endId) return true;
-        visited.add(startId);
+    function nextLevel() {
+        if (currentLevelIndex < levels.length - 1) {
+            currentLevelIndex++;
+            currentLevel = levels[currentLevelIndex];
+            loadLevel(currentLevel);
+        } else {
+            alert('Все уровни пройдены!');
+        }
+    }
 
-        const adjacentNodes = edges
-            .filter(edge => edge.from === startId || edge.to === startId)
-            .map(edge => edge.from === startId ? edge.to : edge.from)
-            .filter(nodeId => !visited.has(nodeId));
+    function resetLevel() {
+        currentNode = currentLevel.startNode;
+        currentCost = 0;
+        loadLevel(currentLevel);
+    }
 
-        for (let nodeId of adjacentNodes) {
-            if (isPathAvailable(nodeId, endId, visited)) {
-                return true;
-            }
+    function isConnectedToEnd(nodeId) {
+        const endNode = nodes.find(n => n.id === currentLevel.endNode);
+
+        if (!endNode) {
+            console.error("End node is not defined");
+            return false;
         }
 
-        return false;
+        return edges.some(edge =>
+            (edge.from === nodeId && edge.to === endNode.id) ||
+            (edge.to === nodeId && edge.from === endNode.id)
+        );
     }
 
     function drawGraph() {
         gameCanvas.innerHTML = '';
-        
+    
         let costLabels = [];
     
         edges.forEach((edge, index) => {
@@ -131,20 +252,16 @@ document.addEventListener('DOMContentLoaded', function () {
             edgeElement.style.left = `${fromNode.x + 15}px`;
             edgeElement.style.top = `${fromNode.y + 15}px`;
             edgeElement.classList.add('edge');
-            edgeElement.setAttribute('data-id', `${edge.from}-${edge.to}`); // Устанавливаем уникальный идентификатор ребра
+            edgeElement.setAttribute('data-id', `${edge.from}-${edge.to}`);
     
-            const existingLabel = costLabels.find(label => 
-                (label.from === edge.from && label.to === edge.to) || 
+            const existingLabel = costLabels.find(label =>
+                (label.from === edge.from && label.to === edge.to) ||
                 (label.from === edge.to && label.to === edge.from)
             );
     
             if (!existingLabel) {
                 let labelX = (fromNode.x + toNode.x) / 2;
                 let labelY = ((fromNode.y + toNode.y) / 2) - 10;
-    
-                while (costLabels.some(label => Math.abs(label.x - labelX) < 40 && Math.abs(label.y - labelY) < 20)) {
-                    labelY -= 10;
-                }
     
                 costLabels.push({ from: edge.from, to: edge.to, x: labelX, y: labelY });
     
@@ -166,9 +283,24 @@ document.addEventListener('DOMContentLoaded', function () {
     
         nodes.forEach(node => {
             const nodeElement = document.createElement('div');
-            nodeElement.className = `node ${node.isStart ? 'start' : node.isEnd ? 'end' : isNodeAccessible(node.id) ? 'accessible' : 'inaccessible'}`;
-            nodeElement.style.left = `${node.x}px`;
-            nodeElement.style.top = `${node.y}px`;
+            nodeElement.classList.add('node');
+    
+            if (node.id === currentLevel.startNode) {
+                nodeElement.classList.add('start');
+            } else if (node.id === currentLevel.endNode) {
+                nodeElement.classList.add('end');
+            } else if (node.id === currentNode) {
+                nodeElement.classList.add('current');
+            } else if (document.querySelector(`.node[data-id="${node.id}"]`)?.classList.contains('visited')) {
+                nodeElement.classList.add('visited');
+            } else if (isNodeAccessible(node.id)) {
+                nodeElement.classList.add('accessible');
+            } else {
+                nodeElement.classList.add('default');
+            }
+    
+            nodeElement.style.left = `${nodePositions[node.id].x}px`;
+            nodeElement.style.top = `${nodePositions[node.id].y}px`;
             nodeElement.setAttribute('data-id', node.id);
     
             if (isConnectedToEnd(node.id)) {
@@ -181,7 +313,39 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     
-    // Функция для подсветки пути между двумя узлами
+    
+
+    function isNodeAccessible(nodeId) {
+        return edges.some(edge =>
+            (edge.from === currentNode && edge.to === nodeId) ||
+            (edge.to === currentNode && edge.from === nodeId)
+        );
+    }
+
+    function moveToNode(nodeId) {
+        const edge = edges.find(edge =>
+            (edge.from === currentNode && edge.to === nodeId) ||
+            (edge.to === currentNode && edge.from === nodeId)
+        );
+    
+        if (edge) {
+            currentCost += edge.cost;
+    
+            // Отметить текущий узел как посещённый
+            document.querySelector(`.node[data-id="${currentNode}"]`).classList.add('visited');
+    
+            currentNode = nodeId;
+            costCounter.innerHTML = `Текущая стоимость: ${currentCost}`;
+            drawGraph();
+    
+            if (currentNode === currentLevel.endNode) {
+                displayVictoryMessage();
+            }
+        }
+    }
+    
+    
+
     function highlightPath(fromId, toId) {
         // Сбрасываем предыдущую подсветку
         document.querySelectorAll('.edge').forEach(edge => {
@@ -192,68 +356,71 @@ document.addEventListener('DOMContentLoaded', function () {
             node.style.backgroundColor = '';
             node.style.border = '';
         });
-    
+
         // Подсвечиваем узлы
         const fromNodeElement = document.querySelector(`.node[data-id="${fromId}"]`);
         const toNodeElement = document.querySelector(`.node[data-id="${toId}"]`);
-    
+
         if (fromNodeElement) {
             fromNodeElement.style.backgroundColor = 'yellow';
         }
         if (toNodeElement) {
             toNodeElement.style.backgroundColor = 'yellow';
         }
-    
+
         // Подсвечиваем ребро
         const edgeElement = document.querySelector(`.edge[data-id="${fromId}-${toId}"], .edge[data-id="${toId}-${fromId}"]`);
-    
+
         if (edgeElement) {
             edgeElement.style.backgroundColor = 'red';
             edgeElement.style.height = '4px';
         }
     }
-    
-    
-    
-    
 
-    function isNodeAccessible(nodeId) {
-        return edges.some(edge => 
-            (edge.from === currentNode && edge.to === nodeId) || 
-            (edge.to === currentNode && edge.from === nodeId)
-        );
-    }
+    function findShortestPath() {
+        let distances = {};
+        let prevNodes = {};
+        let unvisited = new Set(nodes.map(node => node.id));
 
-    function isConnectedToEnd(nodeId) {
-        const endNode = nodes.find(n => n.isEnd);
-        return edges.some(edge => 
-            (edge.from === nodeId && edge.to === endNode.id) || 
-            (edge.to === nodeId && edge.from === endNode.id)
-        );
-    }
+        nodes.forEach(node => {
+            distances[node.id] = Infinity;
+        });
+        distances[nodes[0].id] = 0;
 
-    function moveToNode(nodeId) {
-        const edge = edges.find(edge => 
-            (edge.from === currentNode && edge.to === nodeId) || 
-            (edge.to === currentNode && edge.from === nodeId)
-        );
+        while (unvisited.size > 0) {
+            let currentNodeId = [...unvisited].reduce((minNodeId, nodeId) =>
+                distances[nodeId] < distances[minNodeId] ? nodeId : minNodeId, [...unvisited][0]);
 
-        if (edge) {
-            currentCost += edge.cost;
-            currentNode = nodeId;
-            costCounter.innerHTML = `Текущая стоимость: ${currentCost}`;
-            drawGraph();
+            if (distances[currentNodeId] === Infinity) break;
+            unvisited.delete(currentNodeId);
 
-            if (nodes.find(n => n.id === currentNode).isEnd) {
-                displayVictoryMessage();
-            }
+            edges.filter(edge => edge.from === currentNodeId || edge.to === currentNodeId).forEach(edge => {
+                let neighborId = edge.from === currentNodeId ? edge.to : edge.from;
+                if (!unvisited.has(neighborId)) return;
+
+                let newDist = distances[currentNodeId] + edge.cost;
+                if (newDist < distances[neighborId]) {
+                    distances[neighborId] = newDist;
+                    prevNodes[neighborId] = currentNodeId;
+                }
+            });
         }
+
+        let path = [];
+        let currentNodeId = nodes[nodes.length - 1].id;
+        while (currentNodeId !== nodes[0].id) {
+            path.unshift(currentNodeId);
+            currentNodeId = prevNodes[currentNodeId];
+        }
+        path.unshift(nodes[0].id);
+
+        return { path, cost: distances[nodes[nodes.length - 1].id] };
     }
 
     function displayVictoryMessage() {
         const shortestPathResult = findShortestPath();
-        const minScore = shortestPathResult.cost; // Получаем минимальный скор
-    
+        const minScore = shortestPathResult.cost;
+
         const victoryMessage = document.createElement('div');
         victoryMessage.innerHTML = `Поздравляем! Вы достигли цели с общей стоимостью: ${currentCost}<br>Минимальная возможная стоимость: ${minScore}`;
         victoryMessage.style.position = 'absolute';
@@ -267,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
         victoryMessage.style.fontSize = '24px';
         victoryMessage.style.zIndex = '10';
         victoryMessage.style.textAlign = 'center';
-    
+
         // Кнопка "Переиграть"
         const replayButton = document.createElement('button');
         replayButton.innerText = "Переиграть";
@@ -282,7 +449,7 @@ document.addEventListener('DOMContentLoaded', function () {
             drawGraph(); // Перерисовываем тот же самый граф
             victoryMessage.remove(); // Убираем сообщение о победе
         });
-    
+
         // Кнопка "Новая игра"
         const newGameButton = document.createElement('button');
         newGameButton.innerText = "Новая игра";
@@ -294,62 +461,18 @@ document.addEventListener('DOMContentLoaded', function () {
             gameCanvas.innerHTML = ''; // Очистить холст
             currentCost = 0;
             costCounter.innerHTML = `Текущая стоимость: ${currentCost}`;
-            generateValidGraph();
-            drawGraph();
+            nextLevel(); // Переходим на следующий уровень
         });
-    
+
         victoryMessage.appendChild(replayButton);
         victoryMessage.appendChild(newGameButton);
         gameCanvas.appendChild(victoryMessage);
     }
-    
-    
-    function findShortestPath() {
-        let distances = {};
-        let prevNodes = {};
-        let unvisited = new Set(nodes.map(node => node.id));
-    
-        nodes.forEach(node => {
-            distances[node.id] = Infinity;
-        });
-        distances[nodes[0].id] = 0;
-    
-        while (unvisited.size > 0) {
-            let currentNodeId = [...unvisited].reduce((minNodeId, nodeId) => 
-                distances[nodeId] < distances[minNodeId] ? nodeId : minNodeId, [...unvisited][0]);
-    
-            if (distances[currentNodeId] === Infinity) break;
-            unvisited.delete(currentNodeId);
-    
-            edges.filter(edge => edge.from === currentNodeId || edge.to === currentNodeId).forEach(edge => {
-                let neighborId = edge.from === currentNodeId ? edge.to : edge.from;
-                if (!unvisited.has(neighborId)) return;
-    
-                let newDist = distances[currentNodeId] + edge.cost;
-                if (newDist < distances[neighborId]) {
-                    distances[neighborId] = newDist;
-                    prevNodes[neighborId] = currentNodeId;
-                }
-            });
-        }
-    
-        let path = [];
-        let currentNodeId = nodes[nodes.length - 1].id;
-        while (currentNodeId !== nodes[0].id) {
-            path.unshift(currentNodeId);
-            currentNodeId = prevNodes[currentNodeId];
-        }
-        path.unshift(nodes[0].id);
-    
-        // Возвращаем путь и его общую стоимость
-        return { path, cost: distances[nodes[nodes.length - 1].id] };
-    }
-    
-    
+
     function highlightShortestPath() {
         const shortestPathResult = findShortestPath();
         const shortestPath = shortestPathResult.path;
-        
+
         // Сбрасываем предыдущую подсветку
         document.querySelectorAll('.edge').forEach(edge => {
             edge.style.backgroundColor = 'black';
@@ -359,33 +482,89 @@ document.addEventListener('DOMContentLoaded', function () {
             node.style.backgroundColor = '';
             node.style.border = '';
         });
-    
+
         // Подсвечиваем узлы и рёбра на кратчайшем пути
         for (let i = 0; i < shortestPath.length - 1; i++) {
             const fromId = shortestPath[i];
             const toId = shortestPath[i + 1];
-    
+
             const fromNodeElement = document.querySelector(`.node[data-id="${fromId}"]`);
             const toNodeElement = document.querySelector(`.node[data-id="${toId}"]`);
-    
+
             if (fromNodeElement) {
                 fromNodeElement.style.backgroundColor = 'yellow';
             }
             if (toNodeElement) {
                 toNodeElement.style.backgroundColor = 'yellow';
             }
-    
+
             const edgeElement = document.querySelector(`.edge[data-id="${fromId}-${toId}"], .edge[data-id="${toId}-${fromId}"]`);
-    
+
             if (edgeElement) {
                 edgeElement.style.backgroundColor = 'red';
                 edgeElement.style.height = '4px';
             }
         }
     }
-    
-    
 
-    generateValidGraph();
-    drawGraph();
+    function demonstrateAlgorithm() {
+        let distances = {};
+        let prevNodes = {};
+        let unvisited = new Set(nodes.map(node => node.id));
+    
+        // Инициализация расстояний
+        nodes.forEach(node => {
+            distances[node.id] = Infinity;
+        });
+        distances[currentLevel.startNode] = 0;
+    
+        let step = 0;
+    
+        function stepThroughAlgorithm() {
+            if (unvisited.size === 0) return;
+    
+            // Найти узел с минимальной дистанцией среди непосещённых
+            let currentNodeId = [...unvisited].reduce((minNodeId, nodeId) =>
+                distances[nodeId] < distances[minNodeId] ? nodeId : minNodeId, [...unvisited][0]);
+    
+            // Если расстояние бесконечно, алгоритм завершен
+            if (distances[currentNodeId] === Infinity) return;
+    
+            unvisited.delete(currentNodeId);
+    
+            // Подсветка текущего узла
+            document.querySelector(`.node[data-id="${currentNodeId}"]`).style.backgroundColor = 'blue';
+    
+            edges.filter(edge => edge.from === currentNodeId || edge.to === currentNodeId).forEach(edge => {
+                let neighborId = edge.from === currentNodeId ? edge.to : edge.from;
+    
+                if (!unvisited.has(neighborId)) return;
+    
+                let newDist = distances[currentNodeId] + edge.cost;
+    
+                if (newDist < distances[neighborId]) {
+                    distances[neighborId] = newDist;
+                    prevNodes[neighborId] = currentNodeId;
+    
+                    // Подсветка ребра
+                    const edgeElement = document.querySelector(`.edge[data-id="${edge.from}-${edge.to}"], .edge[data-id="${edge.to}-${edge.from}"]`);
+                    if (edgeElement) {
+                        edgeElement.style.backgroundColor = 'orange';
+                        edgeElement.style.height = '4px';
+                    }
+    
+                    // Подсветка соседнего узла
+                    document.querySelector(`.node[data-id="${neighborId}"]`).style.backgroundColor = 'lightgreen';
+                }
+            });
+    
+            step++;
+    
+            // Пауза перед следующим шагом
+            setTimeout(stepThroughAlgorithm, 1000);
+        }
+    
+        stepThroughAlgorithm();
+    }
+    
 });
